@@ -1,2 +1,2 @@
 # scheduler
-REST API for scheduling application backend
+REST API for scheduling a list of attendees
