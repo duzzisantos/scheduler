@@ -1,4 +1,5 @@
-const Guest = require("./model/model")
+const Guest = require("./model/model");
+const nodemailer = require("nodemailer");
 
 //Create a file
 
@@ -14,11 +15,53 @@ exports.create = (req, res) => {
     email: req.body.email,
   });
 
+  //Create NodeJS mailer functionality, so that post request triggers an email feedback
+
+  const partyHostEmail = "";
+  const partyHostPassword = "gkqbzzfstmbkiarf";
+
+  const transporter = nodemailer.createTransport({
+    auth: {
+      user: partyHostEmail,
+      pass: partyHostPassword,
+    },
+    authMethod: "PLAIN",
+    host: "smtp.gmail.com",
+    secure: false,
+    port: 587,
+  });
+
+//This contains the email body
+
+  const htmlContent = `<h2>We look forward to seeing you!</h2>
+  <h4>Here are the details: </h4> <p>Invitation ID: ${guest.guestID}</p>
+  <p>Name: ${guest.firstName} ${guest.lastName}</p> <p>Party address: 999 Okeke BLVD, Towson, MD.</p> 
+  <p>Date: 12.12.2022, Time: 19:00</P
+  <p><img src="https://cdn.dribbble.com/users/2055971/screenshots/13101945/media/37e61baee74c5c06d8747214a38d4ac3.jpg?compress=1&resize=400x300&vertical=top" alt="IV-banner"></p>`;
+  const plainText =
+    "We look forward to seeing you! Here are the details:  Invitation ID:  . Name:  .";
+
+
+  const mailOptions = {
+    from: partyHostEmail,
+    to: guest.email,
+    subject: "Thanks for signing up for Felix's party!",
+    text: plainText,
+    html: htmlContent,
+  };
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("Email sent: ", info.response);
+    }
+  });
   //This saves the file we have created
   guest
     .save(guest)
     .then((data) => {
-      console.log(data)
+      console.log(data);
     })
     .catch((err) => {
       console.log(err);
@@ -50,7 +93,7 @@ exports.findOne = (req, res) => {
       if (!data) {
         console.log("Error, not found!");
       } else {
-        console.log(res.json(data));
+        console.log(data);
       }
     })
     .catch((err) => {
@@ -98,7 +141,8 @@ exports.deleteAll = (req, res) => {
   Guest.deleteMany({})
     .then((data) => {
       res.send({
-        message: "Deleted everything!", data
+        message: "Deleted everything!",
+        data,
       });
     })
     .catch((err) => {
