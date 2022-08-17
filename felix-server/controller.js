@@ -1,6 +1,6 @@
 const Guest = require("./model/model");
 const nodemailer = require("nodemailer");
-
+const QRCode = require("qrcode");
 //Create a file
 
 exports.create = (req, res) => {
@@ -15,8 +15,8 @@ exports.create = (req, res) => {
     email: req.body.email,
   });
 
-  //Create NodeJS mailer functionality, so that post request triggers an email feedback
 
+  //Email and password needed for outgoing mail authentication
   const partyHostEmail = "";
   const partyHostPassword = "gkqbzzfstmbkiarf";
 
@@ -31,19 +31,20 @@ exports.create = (req, res) => {
     port: 587,
   });
 
-//This contains the email body
+  //This contains the email body
 
-  const htmlContent = `<h2>We look forward to seeing you!</h2>
+  const htmlContent = `<h2>${guest.firstName}, we look forward to seeing you!</h2>
   <h4>Here are the details: </h4> <p>Invitation ID: ${guest.guestID}</p>
   <p>Name: ${guest.firstName} ${guest.lastName}</p> <p>Party address: 999 Okeke BLVD, Towson, MD.</p> 
   <p>Date: 12.12.2022, Time: 19:00</P
-  <p><img src="https://cdn.dribbble.com/users/2055971/screenshots/13101945/media/37e61baee74c5c06d8747214a38d4ac3.jpg?compress=1&resize=400x300&vertical=top" alt="IV-banner"></p>`;
+  <p><img src="https://cdn.dribbble.com/users/2055971/screenshots/13101945/media/37e61baee74c5c06d8747214a38d4ac3.jpg?compress=1&resize=400x300&vertical=top" alt="IV-banner"></p>
+  <div id="container"></div>`;
+
   const plainText =
     "We look forward to seeing you! Here are the details:  Invitation ID:  . Name:  .";
 
-
   const mailOptions = {
-    from: partyHostEmail,
+    from: "Duzie " + partyHostEmail,
     to: guest.email,
     subject: "Thanks for signing up for Felix's party!",
     text: plainText,
