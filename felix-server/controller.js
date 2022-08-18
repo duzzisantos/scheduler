@@ -1,8 +1,8 @@
 const Guest = require("./model/model");
 const nodemailer = require("nodemailer");
-const QRCode = require("qrcode");
-//Create a file
 
+//Create a file
+//This action triggers two events: an Email SMTP request, and an HTTP post request
 exports.create = (req, res) => {
   if (!req.body.ID) {
     res.status(500).json({ message: "Body cannot be empty!" });
@@ -17,8 +17,8 @@ exports.create = (req, res) => {
 
 
   //Email and password needed for outgoing mail authentication
-  const partyHostEmail = "";
-  const partyHostPassword = "gkqbzzfstmbkiarf";
+  const partyHostEmail = "add yours";
+  const partyHostPassword = "add yours";
 
   const transporter = nodemailer.createTransport({
     auth: {
@@ -35,10 +35,10 @@ exports.create = (req, res) => {
 
   const htmlContent = `<h2>${guest.firstName}, we look forward to seeing you!</h2>
   <h4>Here are the details: </h4> <p>Invitation ID: ${guest.guestID}</p>
-  <p>Name: ${guest.firstName} ${guest.lastName}</p> <p>Party address: 999 Okeke BLVD, Towson, MD.</p> 
-  <p>Date: 12.12.2022, Time: 19:00</P
+  <p>Name: ${guest.firstName} ${guest.lastName}</p> <p>Party address: 1000 York Road, Towson, MD.</p> 
+  <p>Date: 12.12.2022, Time: 19:00</p>
   <p><img src="https://cdn.dribbble.com/users/2055971/screenshots/13101945/media/37e61baee74c5c06d8747214a38d4ac3.jpg?compress=1&resize=400x300&vertical=top" alt="IV-banner"></p>
-  <div id="container"></div>`;
+  <div id="qr-code"></div>`;
 
   const plainText =
     "We look forward to seeing you! Here are the details:  Invitation ID:  . Name:  .";
@@ -51,6 +51,7 @@ exports.create = (req, res) => {
     html: htmlContent,
   };
 
+  //This triggers an email when we submit form, albeit with an SMTP request
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.log(error);
@@ -58,7 +59,8 @@ exports.create = (req, res) => {
       console.log("Email sent: ", info.response);
     }
   });
-  //This saves the file we have created
+  
+  //This saves the file we have created to the database with an HTTP post request
   guest
     .save(guest)
     .then((data) => {
