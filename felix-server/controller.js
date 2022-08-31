@@ -31,7 +31,7 @@ exports.create = (req, res) => {
     port: 587,
   });
 
-  //This contains the email body
+  //This is the email body template
 
   const htmlContent = `<h2>${guest.firstName}, we look forward to seeing you!</h2>
   <h4>Here are the details: </h4> <p>Invitation ID: ${guest.guestID}</p>
