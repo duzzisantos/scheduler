@@ -31,7 +31,7 @@ exports.create = (req, res) => {
     port: 587,
   });
 
-  //This is the email body template
+  //This is the email body template added to the mail options, and rendered as HTML on email client. eg, Gmail.
 
   const htmlContent = `<h2>${guest.firstName}, we look forward to seeing you!</h2>
   <h4>Here are the details: </h4> <p>Invitation ID: ${guest.guestID}</p>
